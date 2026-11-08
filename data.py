@@ -1,37 +1,50 @@
-# data.py - penyimpanan data bersama (Orang 1)
-# Semua file lain mengimpor data dari sini.
-# Catatan: jangan tulis ulang variabelnya dengan "=" di file lain, cukup ubah isinya
-# (contoh: dataPengguna["user1"]["saldo"] -= harga).
-
 import json
 
 namaFile = "dataKosku.json"
 
-# Tipe kamar bersifat tetap, jadi pakai tuple (materi tuple)
-tipeKamar = ("Standar", "AC", "VIP")
+tipeKamar = ("Standar", "Deluxe", "VIP")
 
 dataPengguna = {
-    "admin": {"password": "admin123", "level": "admin", "saldo": 0, "kamarSewa": None},
-    "user1": {"password": "user123", "level": "user", "saldo": 500000, "kamarSewa": None},
+    "shean": {"password": "059", "level": "admin", "saldo": 0, "kamarSewa": None},
+    "robin": {"password": "068", "level": "admin", "saldo": 0, "kamarSewa": None},
+    "alfi": {"password": "056", "level": "user", "saldo": 3000000, "kamarSewa": None},
 }
+
 
 daftarKamar = {
-    "K001": {"tipe": "AC", "harga": 900000, "fasilitas": "WiFi, KM dalam", "status": "Kosong", "penyewa": None},
+    "K001": {"tipe": "Standar", "harga": 750000, "fasilitas": "Kipas angin, Kasur, KM luar", "status": "Kosong", "penyewa": None},
+    "K002": {"tipe": "Standar", "harga": 950000, "fasilitas": "Kipas angin, Kasur, KM dalam", "status": "Terisi", "penyewa": alfi},
+    "K003": {"tipe": "Deluxe", "harga": 1500000, "fasilitas": "AC, Kasur, KM dalam, WiFi, Meja belajar, Balkon", "status": "Kosong", "penyewa": None},
+    "K004": {"tipe": "Deluxe", "harga": 1800000, "fasilitas": "AC, Kasur, KM dalam, WiFi, Lemari, Balkon", "status": "Kosong", "penyewa": None},
+    "K005": {"tipe": "VIP", "harga": 2500000, "fasilitas": "AC, Kasur, KM dalam, WiFi, Lemari, Balkon, Smart TV, Kulkas mini", "status": "Kosong", "penyewa": None},
 }
 
-# isi tiap riwayat: {"username", "idKamar", "harga", "tanggal"}
-riwayatPemesanan = []
 
-# Sesi login disimpan di dictionary supaya bisa diubah dari file lain
+riwayatPemesanan = {
+    "username": "alfi", "idKamar": "K002", "harga": 950000, "tanggal": "2026-08-01 10:30:00"
+}
+
+
 sesi = {"penggunaLogin": None}
 
 
 def muatData():
-    # TODO: baca namaFile (JSON) ke dataPengguna, daftarKamar, riwayatPemesanan
-    # Kalau file belum ada, biarkan data awal di atas (try-except FileNotFoundError)
-    pass
+    global dataPengguna, daftarKamar, riwayatPemesanan
+    try:
+        with open(namaFile, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            dataPengguna = data.get("dataPengguna", dataPengguna)
+            daftarKamar = data.get("daftarKamar", daftarKamar)
+            riwayatPemesanan = data.get("riwayatPemesanan", riwayatPemesanan)
+    except FileNotFoundError:
+        pass
 
 
 def simpanData():
-    # TODO: tulis dataPengguna, daftarKamar, riwayatPemesanan ke namaFile (JSON)
-    pass
+    data = {
+        "dataPengguna": dataPengguna,
+        "daftarKamar": daftarKamar,
+        "riwayatPemesanan": riwayatPemesanan,
+    }
+    with open(namaFile, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)

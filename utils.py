@@ -1,24 +1,29 @@
-# utils.py - fungsi bantu (Orang 1)
-
 import os
+from data import daftarKamar
 
 
 def bersihkanLayar():
-    # TODO: os.system("cls" jika Windows, selain itu "clear")
-    pass
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 def tekanEnter():
-    # TODO: input("Tekan Enter untuk lanjut...")
-    pass
+    input("\Tekan Enter untuk melanjutkan...")
 
 
 def validasiAngka(teks):
-    # TODO: return True jika teks adalah angka bulat > 0, selain itu False
-    pass
+    if teks.isdigit():
+        return int(teks) > 0
+    return False
+
+
+def formatRupiah(angka):
+    return f"Rp{angka:,.0f}".replace(",", ".")
 
 
 def generateIdBaru():
-    # TODO: buat ID kamar otomatis (K001, K002, ...)
-    # Cek ke daftarKamar supaya tidak kembar (bisa pakai rekursif atau while)
-    pass
+    angka = 1
+    while True:
+        idBaru = f"K{angka:03d}"
+        if idBaru not in daftarKamar:
+            return idBaru
+        angka += 1
