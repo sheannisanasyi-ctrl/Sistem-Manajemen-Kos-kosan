@@ -1,40 +1,50 @@
 # kamar.py - CRUD kamar (Orang 2)
 
+from prettytable import PrettyTable
 from data import daftarKamar, tipeKamar
-from utils import generateIdBaru, validasiAngka
+from utils import bersihkanLayar, tekanEnter, validasiAngka, generateIdBaru, formatRupiah, pilihMenu
 
 
 def kelolaKamar():
-    # TODO: submenu while True: 1 Tambah, 2 Lihat, 3 Ubah, 4 Hapus, 5 Kembali
+    # TODO: while True, tampilkan submenu dengan pilihMenu("Kelola Kamar", [...])
+    # Pilihan: "Tambah", "Lihat", "Ubah", "Hapus", "Kembali"
+    # - panggil fungsi yang sesuai, lalu tekanEnter() (karena menu ini punya perulangan sendiri)
+    # - "Kembali" (atau None jika Ctrl+C): break
     pass
 
 
 def tambahKamar():
-    # TODO: input tipe, harga, fasilitas
+    # TODO: sesuai flowchart tambahKamar()
+    # - idBaru = generateIdBaru()
+    # - input tipe, harga, fasilitas
     # - tipe harus ada di tipeKamar (tuple)
-    # - harga angka > 0
-    # - ID dari generateIdBaru(), status awal "Kosong", penyewa None
+    # - harga harus validasiAngka() lalu diubah ke int
+    # - simpan: {"tipe", "harga", "fasilitas", "status": "Kosong", "penyewa": None}
     pass
 
 
 def lihatKamar(hanyaKosong=False):
-    # TODO: tampilkan tabel PrettyTable (ID, Tipe, Harga, Fasilitas, Status)
-    # - hanyaKosong True: tampilkan kamar berstatus "Kosong" saja (dipakai user)
-    # - jika data kosong: tampilkan "Belum ada data kamar"
+    # TODO: sesuai flowchart lihatKamar()
+    # - jika daftarKamar kosong: "Belum ada data kamar"
+    # - tabel PrettyTable: ID, Tipe, Harga (formatRupiah), Fasilitas, Status
+    # - for idKamar, kamar in daftarKamar.items():
+    #       hanyaKosong True dan status bukan "Kosong": continue
+    #       tambah baris ke tabel
     pass
 
 
 def ubahKamar():
-    # TODO: tampilkan tabel, input ID kamar
-    # - ID tidak ada: pesan error
-    # - input data baru, kosong = tidak diubah
-    # - harga yang diisi harus valid
+    # TODO: sesuai flowchart ubahKamar()
+    # - lihatKamar(), input ID kamar, cek ID ada
+    # - input tipe, harga, fasilitas baru (kosong = tidak diubah)
+    # - JANGAN ubah status/penyewa di sini (status hanya berubah lewat pesanKamar dan berhentiSewa)
+    # - harga yang diisi harus valid, tipe yang diisi harus ada di tipeKamar
     pass
 
 
 def hapusKamar():
-    # TODO: tampilkan tabel, input ID kamar
-    # - ID tidak ada: pesan error
+    # TODO: sesuai flowchart hapusKamar()
+    # - lihatKamar(), input ID kamar, cek ID ada
     # - status "Terisi": tidak boleh dihapus
     # - konfirmasi y/n sebelum hapus
     pass

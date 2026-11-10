@@ -1,17 +1,22 @@
-# saldo.py - top up dan cek saldo (Orang 3)
+# saldo.py - top up dan cek saldo, keduanya untuk USER yang sedang login (Orang 3)
 
 from data import dataPengguna, sesi
-from utils import validasiAngka
+from utils import formatRupiah
 
 
 def topupSaldo():
-    # TODO: (admin) input username user dan nominal
-    # - user harus ada dan level "user"
-    # - nominal angka > 0 (boleh raise ValueError lalu tangkap dengan try-except)
-    # - saldo bertambah sebesar nominal
+    # TODO: sesuai flowchart topupSaldo(), memakai try-except-else dan raise (modul 7.2)
+    # - username = sesi["penggunaLogin"], tampilkan saldo saat ini (formatRupiah)
+    # - try:
+    #       nominal = int(input("Nominal top up : "))
+    #       jika nominal <= 0: raise ValueError("Nominal harus lebih dari 0")
+    #   except ValueError as pesan:
+    #       tampilkan pesan error ("Nominal harus angka lebih dari 0")
+    #   else:
+    #       saldo bertambah sebesar nominal, tampilkan saldo baru
     pass
 
 
 def cekSaldo():
-    # TODO: (user) tampilkan saldo milik sesi["penggunaLogin"]
+    # TODO: tampilkan saldo milik sesi["penggunaLogin"] (formatRupiah)
     pass

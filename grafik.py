@@ -1,4 +1,4 @@
-# grafik.py - visualisasi data, nilai plus modul 9 (Orang 3, kalau sempat)
+# grafik.py - visualisasi data, nilai plus modul 9 (Orang 2, kalau sempat)
 
 import pandas as pd
 import matplotlib.pyplot as plt
