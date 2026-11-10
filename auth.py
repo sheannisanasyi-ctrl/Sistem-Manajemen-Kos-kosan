@@ -21,7 +21,7 @@ def login():
         tekanEnter()
 
     print("\nTerlalu banyak percobaan salah. Akun dikunci sementara.")
-    time.sleep(3)
+    time.sleep(5)
     return False
 
 

@@ -35,10 +35,37 @@ def lihatKamar(hanyaKosong=False):
 
 def ubahKamar():
     # TODO: sesuai flowchart ubahKamar()
-    # - lihatKamar(), input ID kamar, cek ID ada
-    # - input tipe, harga, fasilitas baru (kosong = tidak diubah)
+    # - lihatKamar(), input ID kamar, cek ID ada (jika tidak: "ID tidak ditemukan", selesai)
+    # - pilihan = pilihMenu("Bagian yang diubah", ["Tipe", "Harga", "Fasilitas", "Semua", "Batal"])
+    # - "Tipe": ubahTipe(idKamar)
+    #   "Harga": ubahHarga(idKamar)
+    #   "Fasilitas": ubahFasilitas(idKamar)
+    #   "Semua": ubahTipe(idKamar), ubahHarga(idKamar), lalu ubahFasilitas(idKamar)
+    #   selain itu ("Batal" atau None jika Ctrl+C): "Perubahan dibatalkan"
     # - JANGAN ubah status/penyewa di sini (status hanya berubah lewat pesanKamar dan berhentiSewa)
-    # - harga yang diisi harus valid, tipe yang diisi harus ada di tipeKamar
+    pass
+
+
+def ubahTipe(idKamar):
+    # TODO: sesuai flowchart ubahTipe(idKamar)
+    # - pilih tipe baru dari menu: pilihMenu("Tipe baru", list(tipeKamar))
+    #   (karena dipilih dari tipeKamar, tipenya pasti valid)
+    # - daftarKamar[idKamar]["tipe"] = tipe baru, tampilkan "Tipe berhasil diubah"
+    pass
+
+
+def ubahHarga(idKamar):
+    # TODO: sesuai flowchart ubahHarga(idKamar)
+    # - input harga baru, harus validasiAngka() (angka lebih dari 0), lalu diubah ke int
+    # - daftarKamar[idKamar]["harga"] = harga baru, tampilkan "Harga berhasil diubah"
+    # - jika tidak valid: "Harga harus angka lebih dari 0"
+    pass
+
+
+def ubahFasilitas(idKamar):
+    # TODO: sesuai flowchart ubahFasilitas(idKamar)
+    # - input fasilitas baru, tidak boleh kosong
+    # - daftarKamar[idKamar]["fasilitas"] = fasilitas baru, tampilkan "Fasilitas berhasil diubah"
     pass
 
 
