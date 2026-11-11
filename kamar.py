@@ -26,10 +26,14 @@ def tambahKamar():
 def lihatKamar(hanyaKosong=False):
     # TODO: sesuai flowchart lihatKamar()
     # - jika daftarKamar kosong: "Belum ada data kamar"
-    # - tabel PrettyTable: ID, Tipe, Harga (formatRupiah), Fasilitas, Status
+    # - hanyaKosong True (tampilan user): kolom ID, Tipe, Harga (formatRupiah), Fasilitas
+    # - hanyaKosong False (tampilan admin): kolom ID, Tipe, Harga, Fasilitas, Status, Penyewa
+    #   (isi nama penyewa, atau "-" jika penyewa None)
+    # - jumlahBaris = 0
     # - for idKamar, kamar in daftarKamar.items():
     #       hanyaKosong True dan status bukan "Kosong": continue
-    #       tambah baris ke tabel
+    #       tambah baris ke tabel (sesuai kolom), jumlahBaris += 1
+    # - jumlahBaris > 0: tampilkan tabel; selain itu: "Tidak ada kamar kosong"
     pass
 
 
