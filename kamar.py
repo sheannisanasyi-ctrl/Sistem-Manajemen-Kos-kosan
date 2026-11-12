@@ -52,7 +52,7 @@ def tambahKamar():
         print("Harga harus angka lebih dari 0")
         return
 
-    fasilitas = input("Masukkan fasilitas kamar: ")
+    fasilitas = input("Masukkan fasilitas kamar: ").strip()
 
     daftarKamar[idBaru] = {
         "tipe": tipe,
@@ -177,7 +177,7 @@ def ubahHarga(idKamar):
 
 
 def ubahFasilitas(idKamar):
-    pilihan = input("Masukkan fasilitas baru: ")
+    pilihan = input("Masukkan fasilitas baru: ").strip()
     if pilihan == "":
         print("Fasilitas tidak boleh kosong")
     else:
