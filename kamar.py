@@ -1,6 +1,6 @@
 # kamar.py - CRUD kamar (Orang 2)
 
-from prettytable import PrettyTable
+from prettytable import PrettyTable, ALL
 from data import daftarKamar, tipeKamar 
 from utils import bersihkanLayar, tekanEnter, validasiAngka, generateIdBaru, formatRupiah, pilihMenu
 
@@ -77,7 +77,9 @@ def lihatKamar(hanyaKosong=False):
         return
 
     tabel = PrettyTable()
-    tabel.align = "l"
+    tabel.align = "c"
+    tabel.hrules = ALL
+
     if hanyaKosong:
         tabel.field_names = ["ID", "Tipe", "Harga", "Fasilitas"]
     else:
