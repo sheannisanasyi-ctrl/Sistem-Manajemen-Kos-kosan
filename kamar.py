@@ -46,9 +46,9 @@ def tambahKamar():
         print("Tipe kamar tidak valid")
         return
     
-    angka = input("Masukkan harga kamar: ")
+    angka = int(input("Masukkan harga kamar: "))
 
-    if not validasiAngka(angka):
+    if not validasiAngka(str(angka)):
         print("Harga harus angka lebih dari 0")
         return
 
@@ -164,9 +164,9 @@ def ubahTipe(idKamar):
 
 
 def ubahHarga(idKamar):
-    pilihan = input("Masukkan harga baru: ")
+    pilihan = int(input("Masukkan harga baru: "))
     if validasiAngka(str(pilihan)):
-        daftarKamar[idKamar]["harga"] = int(pilihan)
+        daftarKamar[idKamar]["harga"] = pilihan
         print("Harga berhasil diubah")
     else:
         print("Harga harus angka lebih dari 0")
