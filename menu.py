@@ -4,7 +4,7 @@ from kamar import kelolaKamar, lihatKamar
 from dashboard import tampilDashboard
 from saldo import topupSaldo, cekSaldo
 from pemesanan import pesanKamar, lihatRiwayat, berhentiSewa
-from grafik import tampilGrafik
+# from grafik import tampilGrafik
 
 
 def tampilMenuAwal():
