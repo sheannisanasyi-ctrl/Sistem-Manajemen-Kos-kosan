@@ -6,6 +6,7 @@ from utils import formatRupiah
 
 def topupSaldo():
     username = sesi["penggunaLogin"]
+    print("\n=== TOP UP SALDO ===")
     print(f"saldo anda tersisa: {formatRupiah(username)}")
 
     try:
@@ -32,6 +33,7 @@ def topupSaldo():
 
 def cekSaldo():
     username = sesi["penggunaLogin"]
+    print("=== SALDO ===")
     print(f"saldo anda tersisa: {formatRupiah(username)}")
     # TODO: tampilkan saldo milik sesi["penggunaLogin"] (formatRupiah)
     pass
