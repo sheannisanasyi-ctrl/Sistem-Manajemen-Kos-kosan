@@ -38,8 +38,7 @@ def topupSaldo():
 
 def cekSaldo():
     username = sesi["penggunaLogin"]
-    target = dataPengguna.get(username)
-    saldo = target.get("saldo")
+    saldo = dataPengguna[username]["saldo"]
 
     print('''
     ======== SALDO ========
