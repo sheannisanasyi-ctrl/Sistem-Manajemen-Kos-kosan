@@ -6,8 +6,7 @@ from utils import formatRupiah
 
 def topupSaldo():
     username = sesi["penggunaLogin"]
-    target = dataPengguna.get(username)
-    saldo = target.get("saldo")
+    saldo = dataPengguna[username]["saldo"]
 
     print('''
     ====== TOP UP SALDO ======
@@ -20,10 +19,11 @@ def topupSaldo():
         if nominal <= 0:
             raise ValueError("Nominal harus lebih dari 0")
     except ValueError as pesan:
-        pesan("Nominal harus angka lebih dari 0")
+        print("Nominal harus angka lebih dari 0")
     else:
-        dict[username]["saldo"] += nominal
-        print(f"saldo anda setelah top up: {formatRupiah(saldo)}")
+        dataPengguna[username]["saldo"] += nominal
+        saldoSekarang = dataPengguna[username]["saldo"]
+        print(f"saldo anda setelah top up: {formatRupiah(saldoSekarang)}")
     # TODO: sesuai flowchart topupSaldo(), memakai try-except-else dan raise (modul 7.2)
     # - username = sesi["penggunaLogin"], tampilkan saldo saat ini (formatRupiah)
     # - try:
