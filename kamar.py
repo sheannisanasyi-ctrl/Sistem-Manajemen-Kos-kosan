@@ -1,5 +1,3 @@
-# kamar.py - CRUD kamar (Orang 2)
-
 from prettytable import PrettyTable, ALL
 from data import daftarKamar, tipeKamar 
 from utils import bersihkanLayar, tekanEnter, validasiAngka, generateIdBaru, formatRupiah, pilihMenu
@@ -30,10 +28,6 @@ def kelolaKamar():
             tekanEnter()
         else:
             break
-    # TODO: while True, tampilkan submenu dengan pilihMenu("Kelola Kamar", [...])
-    # Pilihan: "Tambah", "Lihat", "Ubah", "Hapus", "Kembali"
-    # - panggil fungsi yang sesuai, lalu tekanEnter() (karena menu ini punya perulangan sendiri)
-    # - "Kembali" (atau None jika Ctrl+C): break
 
 
 def tambahKamar():
@@ -62,12 +56,6 @@ def tambahKamar():
         "penyewa": None
     }
     print("\nKamar berhasil ditambahkan")
-    # TODO: sesuai flowchart tambahKamar()
-    # - idBaru = generateIdBaru()
-    # - input tipe, harga, fasilitas
-    # - tipe harus ada di tipeKamar (tuple)
-    # - harga harus validasiAngka() lalu diubah ke int
-    # - simpan: {"tipe", "harga", "fasilitas", "status": "Kosong", "penyewa": None}
 
 
 def lihatKamar(hanyaKosong=False):
@@ -107,18 +95,6 @@ def lihatKamar(hanyaKosong=False):
     else:
         print("Tidak ada kamar kosong")
 
-    # TODO: sesuai flowchart lihatKamar()
-    # - jika daftarKamar kosong: "Belum ada data kamar"
-    # - hanyaKosong True (tampilan user): kolom ID, Tipe, Harga (formatRupiah), Fasilitas
-    # - hanyaKosong False (tampilan admin): kolom ID, Tipe, Harga, Fasilitas, Status, Penyewa
-    #   (isi nama penyewa, atau "-" jika penyewa None)
-    # - jumlahBaris = 0
-    # - for idKamar, kamar in daftarKamar.items():
-    #       hanyaKosong True dan status bukan "Kosong": continue
-    #       tambah baris ke tabel (sesuai kolom), jumlahBaris += 1
-    # - jumlahBaris > 0: tampilkan tabel; selain itu: "Tidak ada kamar kosong"
-
-
 
 def ubahKamar():
     bersihkanLayar()
@@ -143,26 +119,12 @@ def ubahKamar():
         ubahFasilitas(idKamar)
     else:
         print("Perubahan dibatalkan")
-    # TODO: sesuai flowchart ubahKamar()
-    # - lihatKamar(), input ID kamar, cek ID ada (jika tidak: "ID tidak ditemukan", selesai)
-    # - pilihan = pilihMenu("Bagian yang diubah", ["Tipe", "Harga", "Fasilitas", "Semua", "Batal"])
-    # - "Tipe": ubahTipe(idKamar)
-    #   "Harga": ubahHarga(idKamar)
-    #   "Fasilitas": ubahFasilitas(idKamar)
-    #   "Semua": ubahTipe(idKamar), ubahHarga(idKamar), lalu ubahFasilitas(idKamar)
-    #   selain itu ("Batal" atau None jika Ctrl+C): "Perubahan dibatalkan"
-    # - JANGAN ubah status/penyewa di sini (status hanya berubah lewat pesanKamar dan berhentiSewa)
-
+ 
 
 def ubahTipe(idKamar):
     pilihan = pilihMenu("Pilih tipe baru", list(tipeKamar))
     daftarKamar[idKamar]["tipe"] = pilihan
     print("Tipe berhasil diubah")
-
-    # TODO: sesuai flowchart ubahTipe(idKamar)
-    # - pilih tipe baru dari menu: pilihMenu("Tipe baru", list(tipeKamar))
-    #   (karena dipilih dari tipeKamar, tipenya pasti valid)
-    # - daftarKamar[idKamar]["tipe"] = tipe baru, tampilkan "Tipe berhasil diubah"
 
 
 def ubahHarga(idKamar):
@@ -172,11 +134,7 @@ def ubahHarga(idKamar):
         print("Harga berhasil diubah")
     else:
         print("Harga harus angka lebih dari 0")
-    # TODO: sesuai flowchart ubahHarga(idKamar)
-    # - input harga baru, harus validasiAngka() (angka lebih dari 0), lalu diubah ke int
-    # - daftarKamar[idKamar]["harga"] = harga baru, tampilkan "Harga berhasil diubah"
-    # - jika tidak valid: "Harga harus angka lebih dari 0"
-
+  
 
 def ubahFasilitas(idKamar):
     pilihan = input("Masukkan fasilitas baru: ").strip()
@@ -185,10 +143,7 @@ def ubahFasilitas(idKamar):
     else:
         daftarKamar[idKamar]["fasilitas"] = pilihan
         print("Fasilitas berhasil diubah")
-    # TODO: sesuai flowchart ubahFasilitas(idKamar)
-    # - input fasilitas baru, tidak boleh kosong
-    # - daftarKamar[idKamar]["fasilitas"] = fasilitas baru, tampilkan "Fasilitas berhasil diubah"
-
+   
 
 def hapusKamar():
     bersihkanLayar()
@@ -209,7 +164,3 @@ def hapusKamar():
                 print("Kamar berhasil dihapus")
             else:
                 print("Penghapusan dibatalkan")
-    # TODO: sesuai flowchart hapusKamar()
-    # - lihatKamar(), input ID kamar, cek ID ada
-    # - status "Terisi": tidak boleh dihapus
-    # - konfirmasi y/n sebelum hapus

@@ -1,5 +1,3 @@
-# pemesanan.py - pesan kamar, riwayat, berhenti sewa (Orang 3)
-
 from datetime import datetime
 from prettytable import PrettyTable
 from data import dataPengguna, daftarKamar, riwayatPemesanan, sesi
