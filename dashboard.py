@@ -1,5 +1,3 @@
-# dashboard.py - ringkasan untuk admin (Orang 3)
-
 from prettytable import PrettyTable
 from data import dataPengguna, daftarKamar, riwayatPemesanan, tipeKamar
 from utils import formatRupiah

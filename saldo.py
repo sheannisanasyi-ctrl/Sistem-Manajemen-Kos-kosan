@@ -9,7 +9,7 @@ def topupSaldo():
     print('''
     ====== TOP UP SALDO ======
     ''')
-    print(f"saldo anda tersisa: {formatRupiah(saldo)}")
+    print(f"Saldo Anda tersisa: {formatRupiah(saldo)}")
 
     try:
         nominal = int(input("Nominal top up: "))
@@ -21,7 +21,7 @@ def topupSaldo():
     else:
         dataPengguna[username]["saldo"] += nominal
         saldoSekarang = dataPengguna[username]["saldo"]
-        print(f"saldo anda setelah top up: {formatRupiah(saldoSekarang)}")
+        print(f"Saldo Anda setelah top up: {formatRupiah(saldoSekarang)}")
  
 
 def cekSaldo():
@@ -31,4 +31,4 @@ def cekSaldo():
     print('''
     ======== SALDO ========
     ''')
-    print(f"saldo anda tersisa: {formatRupiah(saldo)}")
+    print(f"Saldo Anda tersisa: {formatRupiah(saldo)}")
