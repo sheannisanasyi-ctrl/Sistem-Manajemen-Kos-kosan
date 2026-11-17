@@ -43,7 +43,6 @@ def muatData():
     try:
         with open(namaFile, "r", encoding="utf-8") as f:
             data = json.load(f)
-        # isi ulang objek yang sama (jangan pakai "="), supaya file lain ikut terbarui
         dataPengguna.clear()
         dataPengguna.update(data.get("dataPengguna", {}))
         daftarKamar.clear()

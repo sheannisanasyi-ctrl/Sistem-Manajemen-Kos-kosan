@@ -2,9 +2,9 @@ from data import dataPengguna, sesi
 from utils import bersihkanLayar, tekanEnter, formatRupiah, pilihMenu
 from kamar import kelolaKamar, lihatKamar
 from dashboard import tampilDashboard
+from grafik import tampilGrafik
 from saldo import topupSaldo, cekSaldo
 from pemesanan import pesanKamar, lihatRiwayat, berhentiSewa
-# from grafik import tampilGrafik
 
 
 def tampilMenuAwal():
@@ -23,7 +23,7 @@ def menuAdmin():
         print("=" * 40)
         pilihan = pilihMenu(
             "Pilih menu",
-            ["Kelola Kamar", "Dashboard", "Grafik Okupansi", "Logout"],
+            ["Kelola Kamar", "Dashboard", "Grafik Pendapatan", "Logout"],
         )
 
         if pilihan == "Kelola Kamar":
@@ -32,7 +32,7 @@ def menuAdmin():
             bersihkanLayar()
             tampilDashboard()
             tekanEnter()
-        elif pilihan == "Grafik Okupansi":
+        elif pilihan == "Grafik Pendapatan":
             tampilGrafik()
         else:
             sesi["penggunaLogin"] = None
