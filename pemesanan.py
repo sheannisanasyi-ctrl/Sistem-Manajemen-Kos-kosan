@@ -1,80 +1,72 @@
 from datetime import datetime
 from prettytable import PrettyTable
 from data import dataPengguna, daftarKamar, riwayatPemesanan, sesi
-from utils import validasiAngka, formatRupiah
+from utils import formatRupiah
 from kamar import lihatKamar
 
 
 def pesanKamar():
     username = sesi["penggunaLogin"]
-    kamarSewa = dataPengguna[username]["kamarSewa"]
-    saldo = dataPengguna[username]["saldo"]
 
-    if kamarSewa is None:
-        lihatKamar(hanyaKosong=True)
+    if dataPengguna[username]["kamarSewa"] is not None:
+        print("Anda sudah menyewa kamar.")
+        return
 
-        try:
-            inpIDkamar = input("Masukkan ID Kamar: ").strip().capitalize()
+    lihatKamar(hanyaKosong=True)
+    idKamar = input("Masukkan ID Kamar: ").strip().upper()
 
-
-            if inpIDkamar in daftarKamar:
-                penyewa = daftarKamar[inpIDkamar]["penyewa"]
-
-                if penyewa is None:
-                    harga = daftarKamar[inpIDkamar]["harga"]
-
-                    if saldo >= harga:
-                        saldo -= harga
-                        harga = daftarKamar[inpIDkamar]["harga"]
-                        penyewa = username
-                        daftarKamar[inpIDkamar]["status"] = "Terisi"
-                        kamarSewa = inpIDkamar
-                        riwayatPemesanan[username, inpIDkamar, harga, datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
-                        print(f"Berhasil menyewa kamar {inpIDkamar} dengan harga {harga}")
-                    else:
-                        print("saldo anda tidak cukup")
-                else:
-                    print(f"ID Kamar {inpIDkamar} sudah ada penyewa")
-            else:
-                print("ID kamar tidak diketahui")
-        except ValueError:
-            print("ID kamar atau masukkan tidak di ketahui")
+    if idKamar not in daftarKamar:
+        print("ID kamar tidak diketahui.")
+    elif daftarKamar[idKamar]["status"] != "Kosong":
+        print(f"Kamar {idKamar} sudah ada penyewa.")
     else:
-        print("Anda sudah menyewa kamar")
-    # TODO: sesuai flowchart pesanKamar()
-    # - user sudah punya kamar (kamarSewa tidak None): tolak
-    # - lihatKamar(hanyaKosong=True), input ID kamar
-    # - ID harus ada dan status "Kosong"
-    # - saldo >= harga, jika tidak: "Saldo tidak cukup"
-    # - saldo dikurangi harga
-    # - daftarKamar: status "Terisi", penyewa = username
-    # - dataPengguna: kamarSewa = ID kamar
-    # - catat ke riwayatPemesanan: username, idKamar, harga, tanggal (datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    pass
+        harga = daftarKamar[idKamar]["harga"]
+        if dataPengguna[username]["saldo"] < harga:
+            print("Saldo tidak cukup.")
+        else:
+            dataPengguna[username]["saldo"] -= harga
+            daftarKamar[idKamar]["status"] = "Terisi"
+            daftarKamar[idKamar]["penyewa"] = username
+            dataPengguna[username]["kamarSewa"] = idKamar
+            riwayatPemesanan.append({
+                "username": username,
+                "idKamar": idKamar,
+                "harga": harga,
+                "tanggal": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            })
+            print(f"Berhasil menyewa kamar {idKamar} dengan harga {formatRupiah(harga)}.")
 
 
 def lihatRiwayat():
     username = sesi["penggunaLogin"]
-    riwayat = [i for i in riwayatPemesanan if i.get("username") == username]
+    riwayat = [i for i in riwayatPemesanan if i["username"] == username]
 
-    if riwayat:
-        tabel = PrettyTable(["username", "ID Kamar", "Harga", "Tanggal Pemesanan"])
-        tabel.align = "c"
+    if not riwayat:
+        print("Belum ada riwayat pemesanan.")
+        return
 
-        for i in riwayat:
-            tabel.add_row([
-                i["username"],
-                i["idKamar"],
-                i[formatRupiah("harga")],
-                i["tanggal"]
-            ])
+    tabel = PrettyTable(["ID Kamar", "Harga", "Tanggal Pemesanan"])
+    for i in riwayat:
+        tabel.add_row([i["idKamar"], formatRupiah(i["harga"]), i["tanggal"]])
+    print(tabel)
 
-        print(tabel)
+
+def berhentiSewa():
+    username = sesi["penggunaLogin"]
+    idKamar = dataPengguna[username]["kamarSewa"]
+
+    if idKamar is None:
+        print("Anda belum menyewa kamar.")
+        return
+
+    konfirmasi = input(f"Yakin berhenti menyewa kamar {idKamar}? (y/n): ").strip().lower()
+    if konfirmasi == "y":
+        daftarKamar[idKamar]["status"] = "Kosong"
+        daftarKamar[idKamar]["penyewa"] = None
+        dataPengguna[username]["kamarSewa"] = None
+        print("Berhasil berhenti sewa. Saldo tidak dikembalikan.")
     else:
-        print("Belum ada riwayat pemesanan")
-    # TODO: tampilkan riwayat milik sesi["penggunaLogin"] saja (tabel PrettyTable)
-    # - jika tidak ada: "Belum ada riwayat pemesanan"
-    pass
+        print("Dibatalkan.")
 
 
 def berhentiSewa():
