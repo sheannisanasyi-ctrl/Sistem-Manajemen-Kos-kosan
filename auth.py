@@ -7,42 +7,79 @@ from utils import bersihkanLayar, tekanEnter
 def login():
     for percobaan in range(1, 4):
         bersihkanLayar()
-        print("=== LOGIN ===")
+        print("=" * 55)
+        print("KOSKU".center(55))
+        print("HALAMAN LOGIN".center(55))
+        print("=" * 55)
+        
         username = input("Username : ").strip().lower()
         password = pwinput.pwinput("Password : ")
 
-        if username in dataPengguna and dataPengguna[username]["password"] == password:
-            sesi["penggunaLogin"] = username
-            print(f"\nLogin berhasil. Selamat datang, {username}!")
+        if username == "" and password == "":
+            print("\n(!_!) Username dan Password tidak boleh kosong!")
             tekanEnter()
-            return True
+            continue
 
-        print(f"\nUsername atau password salah. Sisa percobaan: {3 - percobaan}")
+        if username == "":
+            print("\n(!_!) Username tidak boleh kosong!")
+            tekanEnter()
+            continue
+
+        if password == "":
+            print("\n(!_!) Password tidak boleh kosong!")
+            tekanEnter()
+            continue
+
+        if username not in dataPengguna:
+            print(f"\n(>_<) Username '{username}' tidak terdaftar!")
+            print(f"Sisa kesempatan: {3 - percobaan}")
+            tekanEnter()
+            continue
+
+        if dataPengguna[username]["password"] != password:
+            print("\n(>_<) OH, NO! Password yang kamu masukkan salah.")
+            print(f"Sisa kesempatan: {3 - percobaan}")
+            tekanEnter()
+            continue
+
+        sesi["penggunaLogin"] = username
+        print("=" * 55)
+        print(f"(^_^) YEAY! Login Berhasil. Selamat datang, {username.upper()}".center(55))
+        print("=" * 55)
         tekanEnter()
+        return True
 
-    print("\nTerlalu banyak percobaan salah. Akun dikunci sementara.")
+    bersihkanLayar()
+    print(" (!_!) AKUNMU DIKUNCI SEMENTARA!")
+    print("\n Terlalu sering salah, nih!")
+    print(" Tunggu sebentar, ya...")
     time.sleep(5)
     return False
 
 
 def register():
     bersihkanLayar()
-    print("=== REGISTER ===")
-    username = input("Username baru : ").strip().lower()
+    print("=" * 55)
+    print("KOSKU".center(55))
+    print("HALAMAN REGISTRASI".center(55))
+    print("=" * 55)
+    
+    username = input("Username : ").strip().lower()
 
     if username == "":
-        print("\nUsername tidak boleh kosong.")
+        print("\n(!_!) Username tidak boleh kosong!")
         tekanEnter()
         return
 
     if username in dataPengguna:
-        print("\nUsername sudah digunakan.")
+        print(f"\n(>_<) Username '{username}' sudah terdaftar!")
         tekanEnter()
         return
 
-    password = pwinput.pwinput("Password baru : ")
+    password = pwinput.pwinput("Password : ")
+    
     if password == "":
-        print("\nPassword tidak boleh kosong.")
+        print("\n(!_!) Password tidak boleh kosong!")
         tekanEnter()
         return
 
@@ -52,5 +89,8 @@ def register():
         "saldo": 0,
         "kamarSewa": None,
     }
-    print("\nRegistrasi berhasil. Silakan login.")
+    
+    print("=" * 55)
+    print("(^_^) YEAY! Registrasi Berhasil! Silakan login kembali".center(55))
+    print("=" * 55)
     tekanEnter()

@@ -21,7 +21,7 @@ def main():
                 register()
             elif pilihan == "Keluar" or pilihan is None:
                 bersihkanLayar()
-                print("Terima kasih telah menggunakan KosKu.")
+                print("Terima kasih telah menggunakan KosKu! (^_^)")
                 break
             else:
                 print("Pilihan tidak valid.")

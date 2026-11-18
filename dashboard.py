@@ -70,7 +70,7 @@ def pemesananTerbaru():
     jumlah = 0
     for i in range(len(riwayatPemesanan) - 1, -1, -1):
         r = riwayatPemesanan[i]
-        tabel.add_row([r["username"], r["kamar"], formatRupiah(r["harga"]), r["tanggal"]])
+        tabel.add_row([r["username"], r["idKamar"], formatRupiah(r["harga"]), r["tanggal"]])
         jumlah += 1
         if jumlah == 5:
             break

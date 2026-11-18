@@ -9,7 +9,7 @@ def pesanKamar():
     username = sesi["penggunaLogin"]
 
     if dataPengguna[username]["kamarSewa"] is not None:
-        print("Anda sudah menyewa kamar.")
+        print("Kamu sudah menyewa kamar!")
         return
 
     lihatKamar(hanyaKosong=True)
@@ -22,7 +22,7 @@ def pesanKamar():
     else:
         harga = daftarKamar[idKamar]["harga"]
         if dataPengguna[username]["saldo"] < harga:
-            print("Saldo tidak cukup.")
+            print("Saldomu tidak cukup untuk menyewa kamar ini.")
         else:
             dataPengguna[username]["saldo"] -= harga
             daftarKamar[idKamar]["status"] = "Terisi"
@@ -42,7 +42,7 @@ def lihatRiwayat():
     riwayat = [i for i in riwayatPemesanan if i["username"] == username]
 
     if not riwayat:
-        print("Belum ada riwayat pemesanan.")
+        print("Kamu belum pernah melakukan pemesanan.")
         return
 
     tabel = PrettyTable(["ID Kamar", "Harga", "Tanggal Pemesanan"])
@@ -56,7 +56,7 @@ def berhentiSewa():
     idKamar = dataPengguna[username]["kamarSewa"]
 
     if idKamar is None:
-        print("Anda belum menyewa kamar.")
+        print("Kamu belum menyewa kamar!")
         return
 
     konfirmasi = input(f"Yakin berhenti menyewa kamar {idKamar}? (y/n): ").strip().lower()
@@ -64,16 +64,6 @@ def berhentiSewa():
         daftarKamar[idKamar]["status"] = "Kosong"
         daftarKamar[idKamar]["penyewa"] = None
         dataPengguna[username]["kamarSewa"] = None
-        print("Berhasil berhenti sewa. Saldo tidak dikembalikan.")
+        print("Berhasil berhenti menyewa kamar.")
     else:
         print("Dibatalkan.")
-
-
-def berhentiSewa():
-    # TODO: sesuai flowchart berhentiSewa()
-    # - jika kamarSewa user None: "Anda belum menyewa kamar"
-    # - konfirmasi y/n
-    # - daftarKamar[idKamar]: status "Kosong", penyewa None
-    # - dataPengguna[username]["kamarSewa"] = None
-    # - saldo tidak dikembalikan
-    pass
