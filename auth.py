@@ -72,7 +72,7 @@ def register():
         return
 
     if username in dataPengguna:
-        print(f"\n(>_<) Username '{username}' sudah terdaftar!")
+        print(f"\n(>_<) Yah... Username '{username}' sudah terdaftar!")
         tekanEnter()
         return
 
