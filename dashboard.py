@@ -20,14 +20,22 @@ def tampilDashboard():
     for akun in dataPengguna.values():
         if akun["level"] == "user":
             totalUser += 1
-    
-    print(f" Total Kamar       : {totalKamar}")
-    print(f" Kamar Terisi      : {kamarTerisi}")
-    print(f" Kamar Kosong      : {kamarKosong}")
-    print(f" Tingkat Okupansi  : {okupansi}%")
-    print(f" Total Pendapatan  : {formatRupiah(totalPendapatan)}")
-    print(f" Total User Terdaftar: {totalUser}")
-    print("=" * 44)
+
+    tabelStatistik = PrettyTable()
+    tabelStatistik.title = "RINGKASAN STATISTIK SISTEM"
+    tabelStatistik.field_names = ["Metrik Informasi", "Jumlah / Nilai"]
+    tabelStatistik.align = "c"
+    tabelStatistik.align["Jumlah / Nilai"] = "c"
+    tabelStatistik.hrules = ALL
+
+    tabelStatistik.add_row(["Total Kamar", str(totalKamar)])
+    tabelStatistik.add_row(["Kamar Terisi", str(kamarTerisi)])
+    tabelStatistik.add_row(["Kamar Kosong", str(kamarKosong)])
+    tabelStatistik.add_row(["Tingkat Okupansi", f"{okupansi}%"])
+    tabelStatistik.add_row(["Total Pendapatan", formatRupiah(totalPendapatan)])
+    tabelStatistik.add_row(["Total User Terdaftar", str(totalUser)])
+
+    print(tabelStatistik)
     print()
     
     rekapPerTipe()
@@ -37,8 +45,9 @@ def tampilDashboard():
 
 
 def rekapPerTipe():
-    print("[-] Rekapitulasi per Tipe Kamar:")
-    tabel = PrettyTable(["Tipe Kamar", "Kosong", "Terisi"])
+    tabel = PrettyTable()
+    tabel.title = "REKAPITULASI PER TIPE KAMAR"
+    tabel.field_names = ["Tipe Kamar", "Kosong", "Terisi"]
     tabel.align = "c"
     tabel.hrules = ALL
     
@@ -58,12 +67,13 @@ def rekapPerTipe():
 
 
 def pemesananTerbaru():
-    print("[-] 5 Transaksi Pemesanan Terbaru:")
     if not riwayatPemesanan:
         print("Belum ada riwayat pemesanan, nih!")
         return
 
-    tabel = PrettyTable(["User", "ID Kamar", "Harga", "Tanggal"])
+    tabel = PrettyTable()
+    tabel.title = "5 TRANSAKSI PEMESANAN TERBARU"
+    tabel.field_names = ["User", "ID Kamar", "Harga", "Tanggal"]
     tabel.align = "c"
     tabel.hrules = ALL
     

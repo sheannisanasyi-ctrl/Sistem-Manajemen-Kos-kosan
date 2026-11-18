@@ -97,10 +97,10 @@ def menuUser():
             tekanEnter()
         elif pilihan == "Riwayat Pemesanan":
             bersihkanLayar()
-            print("=" * 44)
-            print("KOSKU".center(47))
-            print("RIWAYAT PEMESANAN SAYA".center(47))
-            print("=" * 47)
+            print("=" * 48)
+            print("KOSKU".center(48))
+            print("RIWAYAT PEMESANAN SAYA".center(48))
+            print("=" * 48)
             lihatRiwayat()
             tekanEnter()
         elif pilihan == "Berhenti Sewa":
