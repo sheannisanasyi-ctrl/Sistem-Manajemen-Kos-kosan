@@ -1,23 +1,29 @@
 from prettytable import PrettyTable, ALL
-from data import daftarKamar, tipeKamar
-from utils import bersihkanLayar, tekanEnter, validasiAngka, generateIdBaru, formatRupiah, pilihMenu, tampilHeader
+from data import daftarKamar, tipeKamar, hargaMinimal
+from utils import (bersihkanLayar, tekanEnter, validasiAngka, generateIdBaru,
+                   formatRupiah, pilihMenu, tampilHeader)
 
 
-def inputHarga(teks):
-    harga = input(teks).strip()
+def inputHarga(teks, tipe):
+    minimal = hargaMinimal[tipe]
+    harga = input(f"{teks} (minimal {formatRupiah(minimal)}): ").strip()
     if harga == "":
         print("(!_!) Harga tidak boleh kosong!")
         return None
     if not validasiAngka(harga):
-        print("(!_!) Harga harus berupa angka lebih dari 0!")
+        print("(!_!) Harga harus berupa angka bulat tanpa titik atau huruf, contoh: 750000")
         return None
-    return int(harga)
+    harga = int(harga)
+    if harga < minimal:
+        print(f"Harga kamar {tipe} minimal {formatRupiah(minimal)}")
+        return None
+    return harga
 
 
 def inputFasilitas(teks):
     fasilitas = input(teks).strip()
     if fasilitas == "":
-        print("(!_!) Fasilitas tidak boleh kosong!")
+        print("(!_!) Fasilitas tidak boleh kosong")
         return None
     return fasilitas
 
@@ -58,7 +64,7 @@ def tambahKamar():
         print("Tipe kamar tidak valid")
         return
 
-    harga = inputHarga("Masukkan harga kamar: ")
+    harga = inputHarga("Masukkan harga kamar", tipe)
     if harga is None:
         return
 
@@ -73,7 +79,7 @@ def tambahKamar():
         "status": "Kosong",
         "penyewa": None,
     }
-    print(f"\nKamar {idBaru} berhasil ditambahkan.")
+    print(f"\nKamar {idBaru} berhasil ditambahkan!")
 
 
 def lihatKamar(hanyaKosong=False):
@@ -88,11 +94,10 @@ def lihatKamar(hanyaKosong=False):
 
     if hanyaKosong:
         tabel.field_names = ["ID", "Tipe", "Harga", "Fasilitas"]
-        tabel.max_width["Fasilitas"] = 30
+        tabel.max_width = {"Fasilitas": 30}
     else:
         tabel.field_names = ["ID", "Tipe", "Harga", "Fasilitas", "Status", "Penyewa"]
-        tabel.max_width["Fasilitas"] = 30
-
+        tabel.max_width = {"Fasilitas": 30}
 
     jumlahBaris = 0
     for idKamar, kamar in daftarKamar.items():
@@ -122,7 +127,7 @@ def inputIdKamar():
         print("(!_!) ID kamar tidak boleh kosong!")
         return None
     if idKamar not in daftarKamar:
-        print("(>_<) ID kamar tidak ditemukan!")
+        print("(!_!) ID kamar tidak ditemukan!")
         return None
     return idKamar
 
@@ -144,28 +149,38 @@ def ubahKamar():
     elif pilihan == "Fasilitas":
         ubahFasilitas(idKamar)
     elif pilihan == "Semua":
-        if ubahTipe(idKamar) and ubahHarga(idKamar):
-            ubahFasilitas(idKamar)
+ 
+        tipeLama = daftarKamar[idKamar]["tipe"]
+        if ubahTipe(idKamar, False):
+            if ubahHarga(idKamar):
+                ubahFasilitas(idKamar)
+            else:
+                daftarKamar[idKamar]["tipe"] = tipeLama
+                print("Perubahan tipe dibatalkan")
     else:
-        print("Perubahan dibatalkan.")
+        print("Perubahan dibatalkan")
 
 
-def ubahTipe(idKamar):
+def ubahTipe(idKamar, cekHarga=True):
     pilihan = pilihMenu("Pilih tipe baru", list(tipeKamar))
     if pilihan not in tipeKamar:
-        print("Tipe kamar tidak valid")
+        print("(!_!) Tipe kamar tidak valid!")
+        return False
+    if cekHarga and daftarKamar[idKamar]["harga"] < hargaMinimal[pilihan]:
+        print(f"Harga kamar saat ini di bawah minimal tipe {pilihan} "
+              f"({formatRupiah(hargaMinimal[pilihan])}). Ubah harga lebih dulu atau pilih 'Semua'.")
         return False
     daftarKamar[idKamar]["tipe"] = pilihan
-    print("\nTipe berhasil diubah!")
+    print("Tipe berhasil diubah")
     return True
 
 
 def ubahHarga(idKamar):
-    harga = inputHarga("Masukkan harga baru: ")
+    harga = inputHarga("Masukkan harga baru", daftarKamar[idKamar]["tipe"])
     if harga is None:
         return False
     daftarKamar[idKamar]["harga"] = harga
-    print("\nHarga berhasil diubah!")
+    print("Harga berhasil diubah")
     return True
 
 
@@ -174,7 +189,7 @@ def ubahFasilitas(idKamar):
     if fasilitas is None:
         return False
     daftarKamar[idKamar]["fasilitas"] = fasilitas
-    print("\nFasilitas berhasil diubah!")
+    print("Fasilitas berhasil diubah!")
     return True
 
 
@@ -187,7 +202,7 @@ def hapusKamar():
         return
 
     if daftarKamar[idKamar]["status"] == "Terisi":
-        print("\nKamar sedang disewa, tidak bisa dihapus.")
+        print("Kamar sedang disewa, tidak bisa dihapus!")
         return
 
     konfirmasi = pilihMenu(
@@ -196,6 +211,6 @@ def hapusKamar():
     )
     if konfirmasi == "Ya, hapus":
         del daftarKamar[idKamar]
-        print("Kamar berhasil dihapus!")
+        print("Kamar berhasil dihapus.")
     else:
         print("Penghapusan dibatalkan.")

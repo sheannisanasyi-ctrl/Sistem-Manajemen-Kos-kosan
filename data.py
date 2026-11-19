@@ -3,6 +3,7 @@ import json
 namaFile = "dataKosku.json"
 
 tipeKamar = ("Standar", "Deluxe", "VIP")
+hargaMinimal = {"Standar": 500000, "Deluxe": 1000000, "VIP": 2000000}
 
 dataPengguna = {
     "shean": {"password": "059", "level": "admin", "saldo": 0, "kamarSewa": None},

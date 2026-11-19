@@ -41,15 +41,18 @@ def login():
 
         sesi["penggunaLogin"] = username
         print()
-        print(f"(^_^) YEAY! Selamat datang, {username.upper()}")
+        print(f"(^_^) YEAY! Selamat datang, {username.upper()}!")
         tekanEnter()
         return True
 
     bersihkanLayar()
     print(" (!_!) AKUNMU DIKUNCI SEMENTARA!")
     print("\n Terlalu sering salah, nih!")
-    print(" Tunggu sebentar, ya...")
-    time.sleep(5)
+    print()
+    for detik in range(5, 0, -1):
+        print(f" Coba lagi dalam {detik} detik...", end="\r", flush=True)
+        time.sleep(1)
+    print()
     return False
 
 
