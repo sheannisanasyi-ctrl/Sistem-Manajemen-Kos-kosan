@@ -23,26 +23,30 @@ def pesanKamar():
     lihatKamar(hanyaKosong=True)
     idKamar = input("Masukkan ID Kamar: ").strip().upper()
 
-    if idKamar not in daftarKamar:
-        print("ID kamar tidak diketahui.")
-    elif daftarKamar[idKamar]["status"] != "Kosong":
-        print(f"Kamar {idKamar} sudah ada penyewa!")
-    else:
-        harga = daftarKamar[idKamar]["harga"]
-        if dataPengguna[username]["saldo"] < harga:
-            print("(>_<) Saldomu tidak cukup untuk menyewa kamar ini.")
+
+    if idKamar:
+        if idKamar not in daftarKamar:
+            print("ID kamar tidak diketahui.")
+        elif daftarKamar[idKamar]["status"] != "Kosong":
+            print(f"Kamar {idKamar} sudah ada penyewa!")
         else:
-            dataPengguna[username]["saldo"] -= harga
-            daftarKamar[idKamar]["status"] = "Terisi"
-            daftarKamar[idKamar]["penyewa"] = username
-            dataPengguna[username]["kamarSewa"] = idKamar
-            riwayatPemesanan.append({
-                "username": username,
-                "idKamar": idKamar,
-                "harga": harga,
-                "tanggal": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            })
-            print(f"Berhasil menyewa kamar {idKamar} dengan harga {formatRupiah(harga)}.")
+            harga = daftarKamar[idKamar]["harga"]
+            if dataPengguna[username]["saldo"] < harga:
+                print("(>_<) Saldomu tidak cukup untuk menyewa kamar ini.")
+            else:
+                dataPengguna[username]["saldo"] -= harga
+                daftarKamar[idKamar]["status"] = "Terisi"
+                daftarKamar[idKamar]["penyewa"] = username
+                dataPengguna[username]["kamarSewa"] = idKamar
+                riwayatPemesanan.append({
+                    "username": username,
+                    "idKamar": idKamar,
+                    "harga": harga,
+                    "tanggal": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                })
+                print(f"Berhasil menyewa kamar {idKamar} dengan harga {formatRupiah(harga)}.")
+    else:
+        print("ID Kamar tidak boleh kosong")
 
 
 def lihatRiwayat():
