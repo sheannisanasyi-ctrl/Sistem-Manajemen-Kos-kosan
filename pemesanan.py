@@ -1,7 +1,7 @@
 from datetime import datetime
-from prettytable import PrettyTable
+from prettytable import PrettyTable, ALL
 from data import dataPengguna, daftarKamar, riwayatPemesanan, sesi
-from utils import formatRupiah
+from utils import formatRupiah, pilihMenu
 from kamar import lihatKamar
 
 
@@ -12,17 +12,25 @@ def pesanKamar():
         print("Kamu sudah menyewa kamar!")
         return
 
+    kamarKosong = 0
+    for kamar in daftarKamar.values():
+        if kamar["status"] == "Kosong":
+            kamarKosong += 1
+    if kamarKosong == 0:
+        print("(>_<) Maaf ya, saat ini tidak ada kamar kosong.")
+        return
+
     lihatKamar(hanyaKosong=True)
     idKamar = input("Masukkan ID Kamar: ").strip().upper()
 
     if idKamar not in daftarKamar:
         print("ID kamar tidak diketahui.")
     elif daftarKamar[idKamar]["status"] != "Kosong":
-        print(f"Kamar {idKamar} sudah ada penyewa.")
+        print(f"Kamar {idKamar} sudah ada penyewa!")
     else:
         harga = daftarKamar[idKamar]["harga"]
         if dataPengguna[username]["saldo"] < harga:
-            print("Saldomu tidak cukup untuk menyewa kamar ini.")
+            print("(>_<) Saldomu tidak cukup untuk menyewa kamar ini.")
         else:
             dataPengguna[username]["saldo"] -= harga
             daftarKamar[idKamar]["status"] = "Terisi"
@@ -45,7 +53,11 @@ def lihatRiwayat():
         print("Kamu belum pernah melakukan pemesanan.")
         return
 
-    tabel = PrettyTable(["ID Kamar", "Harga", "Tanggal Pemesanan"])
+    tabel = PrettyTable()
+    tabel.title = "RIWAYAT PEMESANAN"
+    tabel.field_names = ["ID Kamar", "Harga", "Tanggal Pemesanan"]
+    tabel.align = "c"
+    tabel.hrules = ALL
     for i in riwayat:
         tabel.add_row([i["idKamar"], formatRupiah(i["harga"]), i["tanggal"]])
     print(tabel)
@@ -59,8 +71,12 @@ def berhentiSewa():
         print("Kamu belum menyewa kamar!")
         return
 
-    konfirmasi = input(f"Yakin berhenti menyewa kamar {idKamar}? (y/n): ").strip().lower()
-    if konfirmasi == "y":
+    konfirmasi = pilihMenu(
+            f"Yakin ingin berhenti menyewa kamar {idKamar}?",
+            ["Ya, berhenti sewa", "Tidak jadi"],
+        )
+
+    if konfirmasi == "Ya, berhenti sewa":
         daftarKamar[idKamar]["status"] = "Kosong"
         daftarKamar[idKamar]["penyewa"] = None
         dataPengguna[username]["kamarSewa"] = None

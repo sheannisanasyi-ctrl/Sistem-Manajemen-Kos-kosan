@@ -1,17 +1,14 @@
 import time
 import pwinput
 from data import dataPengguna, sesi
-from utils import bersihkanLayar, tekanEnter
+from utils import bersihkanLayar, tekanEnter, tampilHeader
 
 
 def login():
     for percobaan in range(1, 4):
         bersihkanLayar()
-        print("=" * 55)
-        print("KOSKU".center(55))
-        print("HALAMAN LOGIN".center(55))
-        print("=" * 55)
-        
+        tampilHeader("HALAMAN LOGIN")
+
         username = input("Username : ").strip().lower()
         password = pwinput.pwinput("Password : ")
 
@@ -43,9 +40,8 @@ def login():
             continue
 
         sesi["penggunaLogin"] = username
-        print("=" * 55)
-        print(f"(^_^) YEAY! Login Berhasil. Selamat datang, {username.upper()}".center(55))
-        print("=" * 55)
+        print()
+        print(f"(^_^) YEAY! Selamat datang, {username.upper()}")
         tekanEnter()
         return True
 
@@ -59,11 +55,8 @@ def login():
 
 def register():
     bersihkanLayar()
-    print("=" * 55)
-    print("KOSKU".center(55))
-    print("HALAMAN REGISTRASI".center(55))
-    print("=" * 55)
-    
+    tampilHeader("HALAMAN REGISTRASI")
+
     username = input("Username : ").strip().lower()
 
     if username == "":
@@ -77,7 +70,7 @@ def register():
         return
 
     password = pwinput.pwinput("Password : ")
-    
+
     if password == "":
         print("\n(!_!) Password tidak boleh kosong!")
         tekanEnter()
@@ -89,8 +82,8 @@ def register():
         "saldo": 0,
         "kamarSewa": None,
     }
-    
-    print("=" * 55)
-    print("(^_^) YEAY! Registrasi Berhasil! Silakan login kembali".center(55))
-    print("=" * 55)
+
+    print()
+    print("(^_^) YEAY! Registrasi Berhasil!")
+    print("Silakan login kembali.".center(50))
     tekanEnter()

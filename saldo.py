@@ -1,12 +1,5 @@
 from data import dataPengguna, sesi
-from utils import formatRupiah
-
-
-def tampilHeader(subjudul, lebar=50):
-    print("=" * lebar)
-    print("KOSKU".center(lebar))
-    print(subjudul.center(lebar))
-    print("=" * lebar)
+from utils import formatRupiah, tampilHeader
 
 
 def topupSaldo():
@@ -26,7 +19,7 @@ def topupSaldo():
     except ValueError as err:
         kodeError = str(err)
         if kodeError == "kosong":
-            print("[-] Nominal top up tidak boleh kosong.")
+            print("[-] Nominal top up tidak boleh kosong!")
         elif kodeError == "kurangDariNol":
             print("[-] Nominal top up harus lebih dari 0!")
         else:
@@ -34,4 +27,5 @@ def topupSaldo():
     else:
         dataPengguna[username]["saldo"] += nominal
         saldoSekarang = dataPengguna[username]["saldo"]
+        print()
         print(f"[+] Top up berhasil! Saldomu sekarang: {formatRupiah(saldoSekarang)}")

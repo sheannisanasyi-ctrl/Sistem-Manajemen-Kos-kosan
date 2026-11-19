@@ -1,14 +1,31 @@
 from prettytable import PrettyTable, ALL
-from data import daftarKamar, tipeKamar 
-from utils import bersihkanLayar, tekanEnter, validasiAngka, generateIdBaru, formatRupiah, pilihMenu
+from data import daftarKamar, tipeKamar
+from utils import bersihkanLayar, tekanEnter, validasiAngka, generateIdBaru, formatRupiah, pilihMenu, tampilHeader
+
+
+def inputHarga(teks):
+    harga = input(teks).strip()
+    if harga == "":
+        print("(!_!) Harga tidak boleh kosong!")
+        return None
+    if not validasiAngka(harga):
+        print("(!_!) Harga harus berupa angka lebih dari 0!")
+        return None
+    return int(harga)
+
+
+def inputFasilitas(teks):
+    fasilitas = input(teks).strip()
+    if fasilitas == "":
+        print("(!_!) Fasilitas tidak boleh kosong!")
+        return None
+    return fasilitas
 
 
 def kelolaKamar():
     while True:
         bersihkanLayar()
-        print("=" * 40)
-        print("  KELOLA KAMAR")
-        print("=" * 40)
+        tampilHeader("KELOLA KAMAR")
         pilihan = pilihMenu(
             "Kelola Kamar",
             ["Tambah", "Lihat", "Ubah", "Hapus", "Kembali"],
@@ -18,6 +35,7 @@ def kelolaKamar():
             tambahKamar()
             tekanEnter()
         elif pilihan == "Lihat":
+            bersihkanLayar()
             lihatKamar()
             tekanEnter()
         elif pilihan == "Ubah":
@@ -32,77 +50,89 @@ def kelolaKamar():
 
 def tambahKamar():
     bersihkanLayar()
+    tampilHeader("TAMBAH KAMAR")
     idBaru = generateIdBaru()
 
     tipe = pilihMenu("Pilih tipe kamar", list(tipeKamar))
-
     if tipe not in tipeKamar:
         print("Tipe kamar tidak valid")
         return
-    
-    angka = int(input("Masukkan harga kamar: "))
 
-    if not validasiAngka(str(angka)):
-        print("Harga harus angka lebih dari 0")
+    harga = inputHarga("Masukkan harga kamar: ")
+    if harga is None:
         return
 
-    fasilitas = input("Masukkan fasilitas kamar: ").strip()
+    fasilitas = inputFasilitas("Masukkan fasilitas kamar: ")
+    if fasilitas is None:
+        return
 
     daftarKamar[idBaru] = {
         "tipe": tipe,
-        "harga": angka,
+        "harga": harga,
         "fasilitas": fasilitas,
         "status": "Kosong",
-        "penyewa": None
+        "penyewa": None,
     }
-    print("\nKamar berhasil ditambahkan")
+    print(f"\nKamar {idBaru} berhasil ditambahkan.")
 
 
 def lihatKamar(hanyaKosong=False):
-    bersihkanLayar()
     if not daftarKamar:
         print("Belum ada data kamar")
         return
 
     tabel = PrettyTable()
+    tabel.title = "DAFTAR KAMAR KOSONG" if hanyaKosong else "DATA KAMAR"
     tabel.align = "c"
     tabel.hrules = ALL
 
     if hanyaKosong:
         tabel.field_names = ["ID", "Tipe", "Harga", "Fasilitas"]
+        tabel.max_width["Fasilitas"] = 30
     else:
         tabel.field_names = ["ID", "Tipe", "Harga", "Fasilitas", "Status", "Penyewa"]
+        tabel.max_width["Fasilitas"] = 30
+
 
     jumlahBaris = 0
     for idKamar, kamar in daftarKamar.items():
         if hanyaKosong and kamar["status"] != "Kosong":
             continue
 
+        harga = formatRupiah(int(kamar["harga"]))
         if hanyaKosong:
-            tabel.add_row([idKamar, kamar["tipe"], formatRupiah(int(kamar["harga"])), kamar["fasilitas"]])
+            tabel.add_row([idKamar, kamar["tipe"], harga, kamar["fasilitas"]])
         else:
-            penyewa = kamar["penyewa"] 
-
-            if kamar["penyewa"] is None:
+            penyewa = kamar["penyewa"]
+            if penyewa is None:
                 penyewa = "-"
-            
-            tabel.add_row([idKamar, kamar["tipe"], formatRupiah(int(kamar["harga"])), kamar["fasilitas"], kamar["status"], penyewa])
+            tabel.add_row([idKamar, kamar["tipe"], harga, kamar["fasilitas"], kamar["status"], penyewa])
 
         jumlahBaris += 1
 
     if jumlahBaris > 0:
         print(tabel)
     else:
-        print("Tidak ada kamar kosong")
+        print("Tidak ada kamar kosong!")
+
+
+def inputIdKamar():
+    idKamar = input("Masukkan ID kamar: ").upper().strip()
+    if idKamar == "":
+        print("(!_!) ID kamar tidak boleh kosong!")
+        return None
+    if idKamar not in daftarKamar:
+        print("(>_<) ID kamar tidak ditemukan!")
+        return None
+    return idKamar
 
 
 def ubahKamar():
     bersihkanLayar()
+    tampilHeader("UBAH KAMAR")
     lihatKamar()
-    idKamar = input("Masukkan ID kamar: ").upper().strip()
-
-    if idKamar not in daftarKamar:
-        print("ID kamar tidak ditemukan")
+    idKamar = inputIdKamar()
+    if idKamar is None:
         return
 
     pilihan = pilihMenu("Bagian yang diubah", ["Tipe", "Harga", "Fasilitas", "Semua", "Batal"])
@@ -114,53 +144,58 @@ def ubahKamar():
     elif pilihan == "Fasilitas":
         ubahFasilitas(idKamar)
     elif pilihan == "Semua":
-        ubahTipe(idKamar)
-        ubahHarga(idKamar)
-        ubahFasilitas(idKamar)
+        if ubahTipe(idKamar) and ubahHarga(idKamar):
+            ubahFasilitas(idKamar)
     else:
-        print("Perubahan dibatalkan")
- 
+        print("Perubahan dibatalkan.")
+
 
 def ubahTipe(idKamar):
     pilihan = pilihMenu("Pilih tipe baru", list(tipeKamar))
+    if pilihan not in tipeKamar:
+        print("Tipe kamar tidak valid")
+        return False
     daftarKamar[idKamar]["tipe"] = pilihan
-    print("Tipe berhasil diubah")
+    print("\nTipe berhasil diubah!")
+    return True
 
 
 def ubahHarga(idKamar):
-    pilihan = int(input("Masukkan harga baru: "))
-    if validasiAngka(str(pilihan)):
-        daftarKamar[idKamar]["harga"] = pilihan
-        print("Harga berhasil diubah")
-    else:
-        print("Harga harus angka lebih dari 0")
-  
+    harga = inputHarga("Masukkan harga baru: ")
+    if harga is None:
+        return False
+    daftarKamar[idKamar]["harga"] = harga
+    print("\nHarga berhasil diubah!")
+    return True
+
 
 def ubahFasilitas(idKamar):
-    pilihan = input("Masukkan fasilitas baru: ").strip()
-    if pilihan == "":
-        print("Fasilitas tidak boleh kosong")
-    else:
-        daftarKamar[idKamar]["fasilitas"] = pilihan
-        print("Fasilitas berhasil diubah")
-   
+    fasilitas = inputFasilitas("Masukkan fasilitas baru: ")
+    if fasilitas is None:
+        return False
+    daftarKamar[idKamar]["fasilitas"] = fasilitas
+    print("\nFasilitas berhasil diubah!")
+    return True
+
 
 def hapusKamar():
     bersihkanLayar()
+    tampilHeader("HAPUS KAMAR")
     lihatKamar()
-    idKamar = input("Masukkan ID kamar: ").upper().strip()
-
-    if idKamar not in daftarKamar:
-        print("ID kamar tidak ditemukan")
+    idKamar = inputIdKamar()
+    if idKamar is None:
         return
+
+    if daftarKamar[idKamar]["status"] == "Terisi":
+        print("Kamar sedang disewa, tidak bisa dihapus.")
+        return
+
+    konfirmasi = pilihMenu(
+        f"Yakin ingin menghapus kamar {idKamar}?",
+        ["Ya, hapus", "Tidak jadi"],
+    )
+    if konfirmasi == "Ya, hapus":
+        del daftarKamar[idKamar]
+        print("Kamar berhasil dihapus!")
     else:
-        if daftarKamar[idKamar]["status"] == "Terisi":
-            print("Kamar sedang disewa, tidak bisa dihapus")
-            return
-        else:
-            konfirmasi = input("Apakah Anda yakin ingin menghapus kamar ini? (y/n): ").lower().strip()
-            if konfirmasi == "y":
-                del daftarKamar[idKamar]
-                print("Kamar berhasil dihapus")
-            else:
-                print("Penghapusan dibatalkan")
+        print("Penghapusan dibatalkan.")

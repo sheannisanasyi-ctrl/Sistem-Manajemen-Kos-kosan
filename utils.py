@@ -36,3 +36,9 @@ def pilihMenu(judul, daftarPilihan):
     if jawaban is None:
         return None
     return jawaban["pilihan"]
+
+def tampilHeader(subjudul, lebar=50):
+    print("=" * lebar)
+    print("KOSKU".center(lebar))
+    print(subjudul.center(lebar))
+    print("=" * lebar)
