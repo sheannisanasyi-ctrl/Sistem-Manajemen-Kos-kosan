@@ -3,7 +3,7 @@ from utils import bersihkanLayar, tekanEnter, formatRupiah, pilihMenu
 from kamar import kelolaKamar, lihatKamar
 from dashboard import tampilDashboard
 from grafik import tampilGrafik
-from saldo import topupSaldo, cekSaldo
+from saldo import topupSaldo
 from pemesanan import pesanKamar, lihatRiwayat, berhentiSewa
 
 

@@ -23,9 +23,8 @@ def tampilDashboard():
 
     tabelStatistik = PrettyTable()
     tabelStatistik.title = "RINGKASAN STATISTIK SISTEM"
-    tabelStatistik.field_names = ["Metrik Informasi", "Jumlah / Nilai"]
+    tabelStatistik.field_names = ["Keterangan", "Data"]
     tabelStatistik.align = "c"
-    tabelStatistik.align["Jumlah / Nilai"] = "c"
     tabelStatistik.hrules = ALL
 
     tabelStatistik.add_row(["Total Kamar", str(totalKamar)])

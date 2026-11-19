@@ -2,33 +2,36 @@ from data import dataPengguna, sesi
 from utils import formatRupiah
 
 
+def tampilHeader(subjudul, lebar=50):
+    print("=" * lebar)
+    print("KOSKU".center(lebar))
+    print(subjudul.center(lebar))
+    print("=" * lebar)
+
+
 def topupSaldo():
     username = sesi["penggunaLogin"]
     saldo = dataPengguna[username]["saldo"]
 
-    print('''
-    ====== TOP UP SALDO ======
-    ''')
+    tampilHeader("Top Up Saldo")
     print(f"Saldo Anda tersisa: {formatRupiah(saldo)}")
 
     try:
-        nominal = int(input("Nominal top up: "))
-        
+        nominal = input("Nominal top up: ").strip()
+        if nominal == "":
+            raise ValueError("kosong")
+        nominal = int(nominal)
         if nominal <= 0:
-            raise ValueError("Nominal harus lebih dari 0")
-    except ValueError as pesan:
-        print("Nominal harus angka lebih dari 0")
+            raise ValueError("kurangDariNol")
+    except ValueError as err:
+        kodeError = str(err)
+        if kodeError == "kosong":
+            print("[-] Nominal top up tidak boleh kosong.")
+        elif kodeError == "kurangDariNol":
+            print("[-] Nominal top up harus lebih dari 0!")
+        else:
+            print("[-] Nominal top up harus berupa angka!")
     else:
         dataPengguna[username]["saldo"] += nominal
         saldoSekarang = dataPengguna[username]["saldo"]
-        print(f"Saldo Anda setelah top up: {formatRupiah(saldoSekarang)}")
- 
-
-def cekSaldo():
-    username = sesi["penggunaLogin"]
-    saldo = dataPengguna[username]["saldo"]
-
-    print('''
-    ======== SALDO ========
-    ''')
-    print(f"Saldo Anda tersisa: {formatRupiah(saldo)}")
+        print(f"[+] Top up berhasil! Saldomu sekarang: {formatRupiah(saldoSekarang)}")
