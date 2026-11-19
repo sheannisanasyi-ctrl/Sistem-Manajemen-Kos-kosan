@@ -187,7 +187,7 @@ def hapusKamar():
         return
 
     if daftarKamar[idKamar]["status"] == "Terisi":
-        print("Kamar sedang disewa, tidak bisa dihapus.")
+        print("\nKamar sedang disewa, tidak bisa dihapus.")
         return
 
     konfirmasi = pilihMenu(
