@@ -88,5 +88,5 @@ def register():
 
     print()
     print("(^_^) YEAY! Registrasi Berhasil!")
-    print("Silakan login kembali.".center(50))
+    print("\nSilakan login kembali.")
     tekanEnter()

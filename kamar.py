@@ -22,10 +22,20 @@ def inputHarga(teks, tipe):
 
 def inputFasilitas(teks):
     fasilitas = input(teks).strip()
-    if fasilitas == "":
+
+    # set menyimpan nama fasilitas yang sudah muncul, supaya tidak ada yang ganda
+    sudahAda = set()
+    daftarBersih = []
+    for item in fasilitas.split(","):
+        item = item.strip()
+        if item != "" and item.lower() not in sudahAda:
+            sudahAda.add(item.lower())
+            daftarBersih.append(item)
+
+    if len(daftarBersih) == 0:
         print("(!_!) Fasilitas tidak boleh kosong")
         return None
-    return fasilitas
+    return ", ".join(daftarBersih)
 
 
 def kelolaKamar():
@@ -149,7 +159,6 @@ def ubahKamar():
     elif pilihan == "Fasilitas":
         ubahFasilitas(idKamar)
     elif pilihan == "Semua":
- 
         tipeLama = daftarKamar[idKamar]["tipe"]
         if ubahTipe(idKamar, False):
             if ubahHarga(idKamar):

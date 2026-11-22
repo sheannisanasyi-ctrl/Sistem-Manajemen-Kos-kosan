@@ -44,7 +44,7 @@ def pesanKamar():
                     "harga": harga,
                     "tanggal": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 })
-                print(f"Berhasil menyewa kamar {idKamar} dengan harga {formatRupiah(harga)}.")
+                print(f"\nBerhasil menyewa kamar {idKamar} dengan harga {formatRupiah(harga)}.")
     else:
         print("ID Kamar tidak boleh kosong")
 
