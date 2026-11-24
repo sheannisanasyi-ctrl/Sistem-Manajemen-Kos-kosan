@@ -1,39 +1,49 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from data import riwayatPemesanan
-from utils import tekanEnter
 
-namaBulan = {"01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr", "05": "Mei", "06": "Jun",
-             "07": "Jul", "08": "Agu", "09": "Sep", "10": "Okt", "11": "Nov", "12": "Des"}
+from data import riwayatPemesanan
+from utils import pesanPeringatan, pesanGagal
+
+namaBulan = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "Mei", 6: "Jun",
+             7: "Jul", 8: "Agu", 9: "Sep", 10: "Okt", 11: "Nov", 12: "Des"}
+
+
+def hitungPendapatanBulanan():
+    total = {}
+    for transaksi in riwayatPemesanan:
+        try:
+            bulan = pd.Period(transaksi["tanggal"][:7], freq="M")
+            harga = int(transaksi["harga"])
+        except (ValueError, KeyError, TypeError):
+            continue  
+        total[bulan] = total.get(bulan, 0) + harga
+
+    if not total:
+        return None
+
+    rentang = pd.period_range(min(total), max(total), freq="M")
+    label = [f"{namaBulan[b.month]} {b.year}" for b in rentang]
+    nilai = [total.get(b, 0) / 1_000_000 for b in rentang]
+    return pd.Series(nilai, index=label)
 
 
 def tampilGrafik():
-    if not riwayatPemesanan:
-        print("Belum ada data pemesanan untuk dibuat grafik.")
-        tekanEnter()
+    pendapatan = hitungPendapatanBulanan()
+    if pendapatan is None:
+        pesanPeringatan("Belum ada data pemesanan buat dibikin grafik nih!")
         return
 
-    pendapatanBulan = {}
-    for riwayat in riwayatPemesanan:
-        bulan = riwayat["tanggal"][:7]
-        if bulan in pendapatanBulan:
-            pendapatanBulan[bulan] += riwayat["harga"]
-        else:
-            pendapatanBulan[bulan] = riwayat["harga"]
-
-    label = []
-    nilai = []
-    for bulan in sorted(pendapatanBulan.keys()):
-        label.append(namaBulan[bulan[5:7]] + " " + bulan[:4])
-        nilai.append(pendapatanBulan[bulan] / 1000000)
-
-    pendapatan = pd.Series(nilai, index=label)
-
-    plt.figure(figsize=(8, 4))
-    plt.plot(pendapatan.index, pendapatan.values, marker="o", color="blue")
-    plt.title("Pendapatan per Bulan")
-    plt.xlabel("Bulan")
-    plt.ylabel("Pendapatan (juta Rp)")
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    try:
+        plt.figure(figsize=(8, 4))
+        batang = plt.bar(pendapatan.index, pendapatan.values, color="royalblue")
+        plt.bar_label(batang, labels=[f"{v:g}" for v in pendapatan.values], padding=2)
+        plt.title("Pendapatan per Bulan")
+        plt.xlabel("Bulan")
+        plt.ylabel("Pendapatan (juta Rupiah)")
+        plt.grid(True, axis="y")
+        plt.tight_layout()
+        plt.show()
+    except Exception as error:
+        pesanGagal(f"Waduh, grafiknya gagal ditampilkan: {error}")
+    finally:
+        plt.close("all")

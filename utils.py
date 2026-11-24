@@ -1,6 +1,9 @@
 import os
+
 import inquirer
-from data import daftarKamar
+from prettytable import PrettyTable, ALL
+
+LEBAR = 50
 
 
 def bersihkanLayar():
@@ -8,24 +11,24 @@ def bersihkanLayar():
 
 
 def tekanEnter():
-    input("\nTekan Enter untuk melanjutkan...")
+    input("\nTekan Enter untuk lanjut...")
 
 
 def validasiAngka(teks):
-    if teks.isdigit():
-        return int(teks) > 0
-    return False
+    return teks.isascii() and teks.isdigit()
 
 
 def formatRupiah(angka):
     return f"Rp{angka:,.0f}".replace(",", ".")
 
 
-def generateIdBaru(angka=1):
-    idBaru = f"K{angka:03d}"
-    if idBaru not in daftarKamar:
-        return idBaru
-    return generateIdBaru(angka + 1)
+def buatTabel(judul, kolom):
+    tabel = PrettyTable()
+    tabel.title = judul
+    tabel.field_names = kolom
+    tabel.align = "c"
+    tabel.hrules = ALL
+    return tabel
 
 
 def pilihMenu(judul, daftarPilihan):
@@ -37,8 +40,26 @@ def pilihMenu(judul, daftarPilihan):
         return None
     return jawaban["pilihan"]
 
-def tampilHeader(subjudul, lebar=50):
+
+def tampilHeader(subjudul, lebar=LEBAR):
     print("=" * lebar)
     print("KOSKU".center(lebar))
     print(subjudul.center(lebar))
     print("=" * lebar)
+
+
+def siapkanLayar(subjudul):
+    bersihkanLayar()
+    tampilHeader(subjudul)
+
+
+def pesanSukses(teks):
+    print(f"\n(^_^) {teks}")
+
+
+def pesanPeringatan(teks):
+    print(f"\n(!_!) {teks}")
+
+
+def pesanGagal(teks):
+    print(f"\n(>_<) {teks}")
