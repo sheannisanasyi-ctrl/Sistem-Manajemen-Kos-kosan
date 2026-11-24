@@ -1,31 +1,27 @@
-from data import dataPengguna, sesi
-from utils import formatRupiah, tampilHeader
+from data import dataPengguna, sesi, maksTopup
+from utils import formatRupiah, validasiAngka, pesanSukses, pesanPeringatan
 
 
 def topupSaldo():
     username = sesi["penggunaLogin"]
-    saldo = dataPengguna[username]["saldo"]
+    print(f"Saldo saat ini: {formatRupiah(dataPengguna[username]['saldo'])}")
+    nominal = input("Nominal top up: ").strip()
+    if nominal == "":
+        pesanPeringatan("Nominal top up jangan dikosongin dong!")
+        return False
+    if not validasiAngka(nominal):
+        pesanPeringatan("Nominal top up harus angka bulat lebih dari 0 ya, contoh: 500000")
+        return False
 
-    tampilHeader("Top Up Saldo")
-    print(f"Saldo Anda tersisa: {formatRupiah(saldo)}")
+    nominal = int(nominal)
+    if nominal <= 0:
+        pesanPeringatan("Nominal top up harus lebih dari 0 ya!")
+        return False
+    if nominal > maksTopup:
+        pesanPeringatan(f"Sekali top up maksimal {formatRupiah(maksTopup)} ya!")
+        return False
 
-    try:
-        nominal = input("Nominal top up: ").strip()
-        if nominal == "":
-            raise ValueError("kosong")
-        nominal = int(nominal)
-        if nominal <= 0:
-            raise ValueError("kurangDariNol")
-    except ValueError as err:
-        kodeError = str(err)
-        if kodeError == "kosong":
-            print("[-] Nominal top up tidak boleh kosong!")
-        elif kodeError == "kurangDariNol":
-            print("[-] Nominal top up harus lebih dari 0!")
-        else:
-            print("[-] Nominal top up harus berupa angka!")
-    else:
-        dataPengguna[username]["saldo"] += nominal
-        saldoSekarang = dataPengguna[username]["saldo"]
-        print()
-        print(f"[+] Top up berhasil! Saldomu sekarang: {formatRupiah(saldoSekarang)}")
+    dataPengguna[username]["saldo"] += nominal
+    saldoSekarang = dataPengguna[username]["saldo"]
+    pesanSukses(f"YEAY! Top up berhasil, saldomu sekarang {formatRupiah(saldoSekarang)}!")
+    return True

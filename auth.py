@@ -1,92 +1,133 @@
+import math
+import sys
 import time
+
 import pwinput
+
 from data import dataPengguna, sesi
-from utils import bersihkanLayar, tekanEnter, tampilHeader
+from keamanan import hashPassword, verifikasiPassword
+from utils import (bersihkanLayar, tekanEnter, siapkanLayar,
+                   pesanSukses, pesanPeringatan, pesanGagal)
+
+maksPercobaan = 3
+durasiKunci = 10
+minimalUsername = 4
+maksUsername = 20
+minimalPassword = 3
+
+
+def sisaWaktuKunci():
+    sisa = sesi["terkunciSampai"] - time.time()
+    return max(0, math.ceil(sisa))
+
+
+def bersihkanBufferInput():
+    try:
+        import msvcrt
+        while msvcrt.kbhit():
+            msvcrt.getch()
+    except ImportError:
+        try:
+            import termios
+            termios.tcflush(sys.stdin, termios.TCIFLUSH)
+        except Exception:
+            pass
+
+
+def countdownKunci():
+    bersihkanLayar()
+    pesanGagal("YAH, LOGIN DIKUNCI SEMENTARA!")
+    pesanPeringatan("Kebanyakan salah nih, tunggu sebentar ya...")
+    print()
+    while True:
+        sisa = sisaWaktuKunci()
+        if sisa <= 0:
+            break
+        print(f"\r(!_!) Coba lagi dalam {sisa} detik...   ", end="", flush=True)
+        time.sleep(1)
+    print()
+    bersihkanBufferInput()
+    bersihkanLayar()
+    pesanSukses("Kunci login sudah dibuka, yuk coba lagi!")
+    tekanEnter()
 
 
 def login():
-    for percobaan in range(1, 4):
-        bersihkanLayar()
-        tampilHeader("HALAMAN LOGIN")
+    if sisaWaktuKunci() > 0:
+        countdownKunci()
+        return False
 
+    percobaan = 0
+    while percobaan < maksPercobaan:
+        siapkanLayar("HALAMAN LOGIN")
         username = input("Username : ").strip().lower()
         password = pwinput.pwinput("Password : ")
 
-        if username == "" and password == "":
-            print("\n(!_!) Username dan Password tidak boleh kosong!")
-            tekanEnter()
-            continue
-
+        kosong = []
         if username == "":
-            print("\n(!_!) Username tidak boleh kosong!")
-            tekanEnter()
-            continue
-
+            kosong.append("Username")
         if password == "":
-            print("\n(!_!) Password tidak boleh kosong!")
+            kosong.append("Password")
+        if kosong:
+            pesanPeringatan(" dan ".join(kosong) + " jangan dikosongin dong!")
             tekanEnter()
             continue
 
-        if username not in dataPengguna:
-            print(f"\n(>_<) Username '{username}' tidak terdaftar!")
-            print(f"Sisa kesempatan: {3 - percobaan}")
-            tekanEnter()
-            continue
-
-        if dataPengguna[username]["password"] != password:
-            print("\n(>_<) OH, NO! Password yang kamu masukkan salah.")
-            print(f"Sisa kesempatan: {3 - percobaan}")
+        akun = dataPengguna.get(username)
+        tersimpan = akun["password"] if akun is not None else None
+        if not verifikasiPassword(password, tersimpan):
+            percobaan += 1
+            pesanGagal("OH, NO! Username atau password salah!")
+            sisa = maksPercobaan - percobaan
+            if sisa > 0:
+                pesanPeringatan(f"Sisa kesempatan: {sisa}")
             tekanEnter()
             continue
 
         sesi["penggunaLogin"] = username
-        print()
-        print(f"(^_^) YEAY! Selamat datang, {username.upper()}!")
+        pesanSukses(f"YEAY! Selamat datang, {username.upper()}!")
         tekanEnter()
         return True
 
-    bersihkanLayar()
-    print(" (!_!) AKUNMU DIKUNCI SEMENTARA!")
-    print("\n Terlalu sering salah, nih!")
-    print()
-    for detik in range(5, 0, -1):
-        print(f" Coba lagi dalam {detik} detik...", end="\r", flush=True)
-        time.sleep(1)
-    print()
+    sesi["terkunciSampai"] = time.time() + durasiKunci
+    countdownKunci()
     return False
 
 
 def register():
-    bersihkanLayar()
-    tampilHeader("HALAMAN REGISTRASI")
-
     username = input("Username : ").strip().lower()
-
     if username == "":
-        print("\n(!_!) Username tidak boleh kosong!")
-        tekanEnter()
-        return
-
+        pesanPeringatan("Username jangan dikosongin dong!")
+        return False
+    if not (username.isascii() and username.isalnum()):
+        pesanPeringatan("Username cuma boleh huruf dan angka ya!")
+        return False
+    if not minimalUsername <= len(username) <= maksUsername:
+        pesanPeringatan(f"Username harus {minimalUsername}-{maksUsername} karakter ya!")
+        return False
     if username in dataPengguna:
-        print(f"\n(>_<) Yah... Username '{username}' sudah terdaftar!")
-        tekanEnter()
-        return
+        pesanGagal(f"Yah... username '{username}' sudah ada yang pakai!")
+        return False
 
     password = pwinput.pwinput("Password : ")
-
     if password == "":
-        print("\n(!_!) Password tidak boleh kosong!")
-        tekanEnter()
-        return
+        pesanPeringatan("Password jangan dikosongin dong!")
+        return False
+    if len(password) < minimalPassword:
+        pesanPeringatan(f"Password minimal {minimalPassword} karakter ya!")
+        return False
+
+    konfirmasi = pwinput.pwinput("Konfirmasi Password : ")
+    if konfirmasi != password:
+        pesanPeringatan("Konfirmasi password nggak cocok nih!")
+        return False
 
     dataPengguna[username] = {
-        "password": password,
+        "password": hashPassword(password),
         "level": "user",
         "saldo": 0,
         "kamarSewa": None,
     }
-
-    print()
-    print("(^_^) YEAY! Registrasi Berhasil!")
-    print("\nSilakan login kembali.")
-    tekanEnter()
+    pesanSukses("YEAY! Registrasi berhasil!")
+    pesanSukses("Yuk login dulu buat mulai pakai KosKu!")
+    return True
