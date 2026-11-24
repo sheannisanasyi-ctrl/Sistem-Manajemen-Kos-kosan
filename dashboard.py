@@ -1,6 +1,5 @@
-from prettytable import PrettyTable, ALL
 from data import daftarKamar, riwayatPemesanan, tipeKamar
-from utils import formatRupiah
+from utils import formatRupiah, buatTabel, pesanPeringatan
 
 
 def tampilDashboard():
@@ -13,21 +12,15 @@ def tampilDashboard():
     okupansi = round(kamarTerisi / totalKamar * 100, 1) if totalKamar > 0 else 0
 
     totalPendapatan = 0
-    for riwayat in riwayatPemesanan:
-        totalPendapatan += riwayat["harga"]
+    for transaksi in riwayatPemesanan:
+        totalPendapatan += transaksi["harga"]
 
-    tabelStatistik = PrettyTable()
-    tabelStatistik.title = "RINGKASAN STATISTIK SISTEM"
-    tabelStatistik.field_names = ["Keterangan", "Data"]
-    tabelStatistik.align = "c"
-    tabelStatistik.hrules = ALL
-
+    tabelStatistik = buatTabel("RINGKASAN STATISTIK SISTEM", ["Keterangan", "Data"])
     tabelStatistik.add_row(["Total Kamar", totalKamar])
     tabelStatistik.add_row(["Kamar Terisi", kamarTerisi])
     tabelStatistik.add_row(["Kamar Kosong", kamarKosong])
     tabelStatistik.add_row(["Tingkat Okupansi", f"{okupansi}%"])
     tabelStatistik.add_row(["Total Pendapatan", formatRupiah(totalPendapatan)])
-
     print(tabelStatistik)
     print()
     rekapPerTipe()
@@ -36,12 +29,7 @@ def tampilDashboard():
 
 
 def rekapPerTipe():
-    tabel = PrettyTable()
-    tabel.title = "REKAPITULASI PER TIPE KAMAR"
-    tabel.field_names = ["Tipe Kamar", "Kosong", "Terisi"]
-    tabel.align = "c"
-    tabel.hrules = ALL
-
+    tabel = buatTabel("REKAPITULASI PER TIPE KAMAR", ["Tipe Kamar", "Kosong", "Terisi"])
     for tipe in tipeKamar:
         kosong = 0
         terisi = 0
@@ -53,27 +41,16 @@ def rekapPerTipe():
             else:
                 terisi += 1
         tabel.add_row([tipe, kosong, terisi])
-
     print(tabel)
 
 
 def pemesananTerbaru():
     if not riwayatPemesanan:
-        print("Belum ada riwayat pemesanan.")
+        pesanPeringatan("Belum ada riwayat pemesanan nih!")
         return
 
-    tabel = PrettyTable()
-    tabel.title = "5 TRANSAKSI PEMESANAN TERBARU"
-    tabel.field_names = ["User", "ID Kamar", "Harga", "Tanggal"]
-    tabel.align = "c"
-    tabel.hrules = ALL
-
-    jumlah = 0
-    for i in range(len(riwayatPemesanan) - 1, -1, -1):
-        r = riwayatPemesanan[i]
-        tabel.add_row([r["username"], r["idKamar"], formatRupiah(r["harga"]), r["tanggal"]])
-        jumlah += 1
-        if jumlah == 5:
-            break
-
+    tabel = buatTabel("TRANSAKSI PEMESANAN TERBARU (MAKS. 5)", ["User", "ID Kamar", "Harga", "Tanggal"])
+    for transaksi in reversed(riwayatPemesanan[-5:]):
+        tabel.add_row([transaksi["username"], transaksi["idKamar"],
+                       formatRupiah(transaksi["harga"]), transaksi["tanggal"]])
     print(tabel)
